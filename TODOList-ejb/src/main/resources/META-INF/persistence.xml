@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="todolistPU" transaction-type="JTA">
+      <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+            <!-- database connection -->
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/todolist" />
+            <property name="javax.persistence.jdbc.user" value="serempre" />
+            <property name="javax.persistence.jdbc.password" value="1234" />
+                 
+            <!--<property name="javax.persistence.sql-load-script-source" value="META-INF/sql/data.sql"/>-->       
+            <!-- configure logging -->
+<!--            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>-->
+        </properties>
+  </persistence-unit>
+</persistence>
+     
