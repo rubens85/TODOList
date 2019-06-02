@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "working_time")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "WorkingTime.findAll", query = "SELECT w FROM WorkingTime w")})
+    @NamedQuery(name = "WorkingTime.findAll", query = "SELECT w FROM WorkingTime w"),
+    @NamedQuery(name = "WorkingTime.findById", query = "SELECT w FROM WorkingTime w WHERE w.id = :id"),
+    @NamedQuery(name = "WorkingTime.findByTimeWorked", query = "SELECT w FROM WorkingTime w WHERE w.timeWorked = :timeWorked")})
 public class WorkingTime implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +43,7 @@ public class WorkingTime implements Serializable {
     @Column(name = "time_worked")
     private Float timeWorked;
     @JoinColumn(name = "id_todo", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Todo todo;
 
     public WorkingTime() {

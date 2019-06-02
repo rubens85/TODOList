@@ -6,10 +6,11 @@
 package com.serempre.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "collaborator")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Collaborator.findAll", query = "SELECT c FROM Collaborator c")})
+    @NamedQuery(name = "Collaborator.findAll", query = "SELECT c FROM Collaborator c"),
+    @NamedQuery(name = "Collaborator.findById", query = "SELECT c FROM Collaborator c WHERE c.id = :id"),
+    @NamedQuery(name = "Collaborator.findByName", query = "SELECT c FROM Collaborator c WHERE c.name = :name"),
+    @NamedQuery(name = "Collaborator.findByLastName", query = "SELECT c FROM Collaborator c WHERE c.lastName = :lastName"),
+    @NamedQuery(name = "Collaborator.findByIdentificationCard", query = "SELECT c FROM Collaborator c WHERE c.identificationCard = :identificationCard")})
 public class Collaborator implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,8 +52,8 @@ public class Collaborator implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "identification_card")
     private String identificationCard;
-    @OneToMany(mappedBy = "collaborator")
-    private Collection<Todo> todoCollection;
+    @OneToMany(mappedBy = "collaborator", fetch = FetchType.EAGER)
+    private Set<Todo> todoSet;
 
     public Collaborator() {
     }
@@ -88,18 +93,26 @@ public class Collaborator implements Serializable {
     public void setIdentificationCard(String identificationCard) {
         this.identificationCard = identificationCard;
     }
-    
-    public String fullName() {
+
+    public String getFullName() {
         return this.name+ " "+this.lastName;
+    }
+    
+    public void resetFields() {
+        this.id = null;
+        this.identificationCard = "";
+        this.lastName = "";
+        this.name = "";
+        this.todoSet = null;
     }
 
     @XmlTransient
-    public Collection<Todo> getTodoCollection() {
-        return todoCollection;
+    public Set<Todo> getTodoSet() {
+        return todoSet;
     }
 
-    public void setTodoCollection(Collection<Todo> todoCollection) {
-        this.todoCollection = todoCollection;
+    public void setTodoSet(Set<Todo> todoSet) {
+        this.todoSet = todoSet;
     }
 
     @Override

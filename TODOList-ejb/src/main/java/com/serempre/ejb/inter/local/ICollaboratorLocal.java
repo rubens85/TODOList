@@ -5,8 +5,8 @@
  */
 package com.serempre.ejb.inter.local;
 
-import com.serempre.entity.Todo;
-import java.util.List;
+import com.serempre.entity.Collaborator;
+import com.serempre.handleexception.UserNotFoundException;
 import javax.ejb.Local;
 
 /**
@@ -14,8 +14,7 @@ import javax.ejb.Local;
  * @author rubens
  */
 @Local
-public interface ITodoLocal {
+public interface ICollaboratorLocal {
     
-    public List<Todo> getTodoALL();
-    public void save(Todo todo);
+    public Collaborator findByIdentification(String identification) throws UserNotFoundException;
 }

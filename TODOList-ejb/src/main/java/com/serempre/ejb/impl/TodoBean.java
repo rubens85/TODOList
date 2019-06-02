@@ -8,20 +8,24 @@ package com.serempre.ejb.impl;
 import com.serempre.ejb.inter.local.ITodoLocal;
 import com.serempre.entity.Todo;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class TodoDAO implements ITodoLocal {
+public class TodoBean implements ITodoLocal {
 
-    @PersistenceContext(unitName="todolistPU") 
-    protected static EntityManager em;
-    
+    @PersistenceContext(unitName = "todolistPU")
+    protected EntityManager em;
+
     @Override
     public List<Todo> getTodoALL() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return em.createQuery("select t from Todo t", Todo.class).getResultList();
     }
-    
+
+    @Override
+    public void save(Todo todo) {
+        em.persist(todo);
+    }
+
 }

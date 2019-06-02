@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+
+
+    <p:dialog header="Registrar Tarea" widgetVar="dialogTODO" modal="true" height="100%" minWidth="500" width="90%" resizable="true">
+
+        <p:fieldset legend="Datos Colaborador" style="margin-bottom:20px" >
+            <p:panelGrid columns="4" styleClass="ui-noborder" style="width: 90%;">
+                <h:outputLabel value="Identificación" style="font-weight:bold"/>
+                <p:inputText value="#{todoAction.todo.collaborator.identificationCard}">
+                    <p:ajax event="keyup" update="name, lastName" listener="#{todoAction.keyupListener}" />
+                </p:inputText>
+                <p:column/>
+                <p:column/>
+                <h:outputLabel  value="Nombre" style="font-weight:bold"/>
+                <p:inputText id="name" value="#{todoAction.todo.collaborator.name}"/>
+                <h:outputLabel value="Apellido" style="font-weight:bold"/>
+                <p:inputText id="lastName" value="#{todoAction.todo.collaborator.lastName}"/>
+            </p:panelGrid> 
+        </p:fieldset>
+
+        <p:fieldset legend="Nueva Tarea" style="margin-bottom:20px">
+            <p:panelGrid columns="4" styleClass="ui-noborder" style="width: 90%;">
+                <h:outputLabel value="Titulo" style="font-weight:bold"/>
+                <p:inputText value="#{todoAction.todo.title}"/>
+                <h:outputLabel value="Tiempo Estimado" style="font-weight:bold"/>
+                <p:inputText value="#{todoAction.todo.estimatedTime}"/>
+            </p:panelGrid><br/>
+            <p:panelGrid columns="2" styleClass="ui-noborder" >
+                <h:outputLabel value="Descripción" style="font-weight:bold"/>
+                <p:inputTextarea value="#{todoAction.todo.description}" cols="50"/>
+            </p:panelGrid>
+        </p:fieldset>
+           <p:commandButton value="Registrar" action="#{todoAction.addTODO()}" update="msgs" />
+    </p:dialog> 
+
+    <p:dialog header="Registrar Tarea" widgetVar="dlg2" modal="true" height="180" width="30%" resizable="false">
+        <p:panelGrid columns="2" styleClass="ui-noborder" style="width: 100%">
+            <h:outputLabel value="Tiempo restante:"/>
+            <h:outputText value="5 horas" />
+            <h:outputLabel value="Añadir tiempo: " />
+            <p:inputText size="2"/>
+            <br/>
+            <br/>
+            <br/>
+            <p:commandButton value="Registrar" type="button" />
+        </p:panelGrid>
+    </p:dialog> 
+
+
+</html>

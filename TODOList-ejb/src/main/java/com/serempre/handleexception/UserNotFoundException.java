@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.serempre.ejb.inter;
+package com.serempre.handleexception;
 
 /**
  *
  * @author rubens
  */
-public interface ITodo {
+public class UserNotFoundException extends Exception {
     
+    public UserNotFoundException(String errorMessage) {
+        super(errorMessage);
+    }
 }

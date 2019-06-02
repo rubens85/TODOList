@@ -6,10 +6,11 @@
 package com.serempre.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,7 +33,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "todo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Todo.findAll", query = "SELECT t FROM Todo t")})
+    @NamedQuery(name = "Todo.findAll", query = "SELECT t FROM Todo t"),
+    @NamedQuery(name = "Todo.findById", query = "SELECT t FROM Todo t WHERE t.id = :id"),
+    @NamedQuery(name = "Todo.findByTitle", query = "SELECT t FROM Todo t WHERE t.title = :title"),
+    @NamedQuery(name = "Todo.findByDescription", query = "SELECT t FROM Todo t WHERE t.description = :description"),
+    @NamedQuery(name = "Todo.findByEstimatedTime", query = "SELECT t FROM Todo t WHERE t.estimatedTime = :estimatedTime"),
+    @NamedQuery(name = "Todo.findByTimeRemaining", query = "SELECT t FROM Todo t WHERE t.timeRemaining = :timeRemaining"),
+    @NamedQuery(name = "Todo.findByTotalTimeWorked", query = "SELECT t FROM Todo t WHERE t.totalTimeWorked = :totalTimeWorked")})
 public class Todo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,19 +51,28 @@ public class Todo implements Serializable {
     @Size(max = 32)
     @Column(name = "title")
     private String title;
+    @NotNull
     @Size(max = 2147483647)
     @Column(name = "description")
     private String description;
     @Column(name = "estimated_time")
     private Short estimatedTime;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "time_remaining")
+    private Float timeRemaining;
+    @Column(name = "total_time_worked")
+    private Float totalTimeWorked;
     @JoinColumn(name = "id_collaborator", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Collaborator collaborator;
-//    @OneToMany(mappedBy = "todo")
-    @Transient
-    private Collection<WorkingTime> workingTimeCollection;
+    @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
+    private Set<WorkingTime> workingTimeSet;
 
     public Todo() {
+    }
+
+    public Todo(Collaborator collaborator) {
+        this.collaborator = collaborator;
     }
 
     public Todo(Integer id) {
@@ -80,7 +96,9 @@ public class Todo implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        if(description == null)
+            return description;
+        return description.length()>16?description.substring(0, 16)+"...":description;
     }
 
     public void setDescription(String description) {
@@ -95,6 +113,22 @@ public class Todo implements Serializable {
         this.estimatedTime = estimatedTime;
     }
 
+    public Float getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public void setTimeRemaining(Float timeRemaining) {
+        this.timeRemaining = timeRemaining;
+    }
+
+    public Float getTotalTimeWorked() {
+        return totalTimeWorked;
+    }
+
+    public void setTotalTimeWorked(Float totalTimeWorked) {
+        this.totalTimeWorked = totalTimeWorked;
+    }
+
     public Collaborator getCollaborator() {
         return collaborator;
     }
@@ -104,12 +138,12 @@ public class Todo implements Serializable {
     }
 
     @XmlTransient
-    public Collection<WorkingTime> getWorkingTimeCollection() {
-        return workingTimeCollection;
+    public Set<WorkingTime> getWorkingTimeSet() {
+        return workingTimeSet;
     }
 
-    public void setWorkingTimeCollection(Collection<WorkingTime> workingTimeCollection) {
-        this.workingTimeCollection = workingTimeCollection;
+    public void setWorkingTimeSet(Set<WorkingTime> workingTimeSet) {
+        this.workingTimeSet = workingTimeSet;
     }
 
     @Override

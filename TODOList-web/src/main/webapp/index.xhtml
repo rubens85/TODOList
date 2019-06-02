@@ -3,22 +3,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
 
     <h:head>
     </h:head>
-
+    <p:growl id="msgs" life="3000" />
     <h:body>
         <h:form>
+            <!--            <p:growl id="msgs" showDetail="true" />
+                        <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />-->
+            <ui:include src="pages/modals.xhtml"/>
 
             <p:panel id="basic" style="margin-bottom:20px">
                 <f:facet name="header">
                     <h:panelGrid columns="2" width="100%">
                         <h:outputText value="TODO List"/>
-                        <p:commandButton value="+"/>
+                        <p:commandButton value="+" type="button" onclick="PF('dialogTODO').show();" />
                     </h:panelGrid>
                 </f:facet>
-                <p:dataTable var="todo" value="#{todoAction.listOfTODO}">
+                <p:dataTable id="tblResul" var="todo" value="#{todoAction.listOfTODO}">
                     <p:column headerText="Empleado">
                         <h:outputText value="#{todo.collaborator.fullName}" />
                     </p:column>
@@ -26,36 +31,27 @@
                     <p:column headerText="Tarea">
                         <h:outputText value="#{todo.title}" />
                     </p:column>
-                    
+
                     <p:column headerText="Descripción" >
-                        <h:outputText value="#{todo.description.substring(0,16)}..."  />
+                        <h:outputText value="#{todo.description}"  />
                     </p:column>
 
                     <p:column headerText="Tiempo Restante">
-                        <h:outputText value="A" />
+                        <h:outputText value="#{todo.timeRemaining}" />
                     </p:column>
 
                     <p:column headerText="">
-                        <p:commandButton value="Modal" type="button" onclick="PF('dlg2').show();" />
+                        <p:commandButton value="+++" type="button" onclick="PF('dlg2').show();" />
 
-                        <p:dialog header="Modal Dialog" widgetVar="dlg2" modal="true" height="180" width="30%" resizable="false">
-                            <p:panelGrid columns="2" styleClass="ui-noborder" style="width: 100%">
-                                <h:outputLabel value="Tiempo restante:"/>
-                                <h:outputText value="5 horas" />
-                                <h:outputLabel value="Añadir tiempo: " />
-                                <p:inputText size="2"/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <p:commandButton value="Registrar" type="button" />
-                            </p:panelGrid>
-                        </p:dialog> 
+
 
                     </p:column>
 
 
                 </p:dataTable>
             </p:panel>
+
+
         </h:form>
     </h:body>
 </html>
