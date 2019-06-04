@@ -52,7 +52,7 @@ public class Collaborator implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "identification_card")
     private String identificationCard;
-    @OneToMany(mappedBy = "collaborator", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "collaborator", fetch = FetchType.LAZY)
     private Set<Todo> todoSet;
 
     public Collaborator() {

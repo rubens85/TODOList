@@ -6,25 +6,31 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       >
-
+    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
     <h:head>
     </h:head>
     <p:growl id="msgs" life="3000" />
     <h:body>
-        <h:form>
+        <h:form id="form">
             <!--            <p:growl id="msgs" showDetail="true" />
                         <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />-->
             <ui:include src="pages/modals.xhtml"/>
+
+            <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <p:graphicImage name="/images/ajaxloader.gif" />
+            </p:dialog>
 
             <p:panel id="basic" style="margin-bottom:20px">
                 <f:facet name="header">
                     <h:panelGrid columns="2" width="100%">
                         <h:outputText value="TODO List"/>
-                        <p:commandButton value="+" type="button" onclick="PF('dialogTODO').show();" />
+                        <p:commandButton title="Registrar Tarea" type="button" onclick="PF('dialogTODO').show();" icon="pi pi-list" />
                     </h:panelGrid>
                 </f:facet>
                 <p:dataTable id="tblResul" var="todo" value="#{todoAction.listOfTODO}">
-                    <p:column headerText="Empleado">
+                    <p:column headerText="Colaborador">
                         <h:outputText value="#{todo.collaborator.fullName}" />
                     </p:column>
 
@@ -33,7 +39,11 @@
                     </p:column>
 
                     <p:column headerText="Descripción" >
-                        <h:outputText value="#{todo.description}"  />
+                        <h:outputText value="#{todo.description.length()>16?todo.description.substring(0, 16).concat('...'):todo.description} "/>
+                    </p:column>
+
+                    <p:column headerText="Tiempo Etimado">
+                        <h:outputText value="#{todo.estimatedTime}" />
                     </p:column>
 
                     <p:column headerText="Tiempo Restante">
@@ -41,17 +51,47 @@
                     </p:column>
 
                     <p:column headerText="">
-                        <p:commandButton value="+++" type="button" onclick="PF('dlg2').show();" />
+                        <p:commandButton update=":form:addWorkTim" title="Registrar Tiempo" 
+                                         oncomplete="PF('dlg2').show();" icon="pi pi-plus-circle" immediate="true">
+                            <f:setPropertyActionListener value="#{todo}" target="#{todoAction.todoAux}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton title="Ver Tiempos Registrados" oncomplete="PF('sidebar2').show()" action="#{todoAction.showWorkTime}" 
+                                         update=":form:tblWT" icon="pi pi-chevron-circle-left" immediate="true">
+                            <f:setPropertyActionListener value="#{todo}" target="#{todoAction.todoAux}" />
+                        </p:commandButton>
 
-
-
+                        <p:commandButton title="Borrar Registro" action="#{todoAction.deleteTODO}" update="msgs, :form:tblResul" 
+                                         icon="pi pi-times" immediate="true">
+                            <p:confirm header="Confirmación" message="¿Desea eliminar el registro?" icon="pi pi-exclamation-triangle" />
+                            <f:setPropertyActionListener value="#{todo}" target="#{todoAction.todoAux}" />
+                        </p:commandButton>
                     </p:column>
 
 
                 </p:dataTable>
+
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closeOnEscape="true"  >
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                </p:confirmDialog>  
             </p:panel>
 
+            <p:sidebar widgetVar="sidebar2" position="right" baseZIndex="10000">
+                <p:dataTable  id="tblWT" var="workingTime" value="#{todoAction.workingTimeList}" sortBy="#{workingTime.dateReg}"
+                              paginator="true" rows="10" >
 
+                    <p:column headerText="Tiempos">
+                        <h:outputText value="#{workingTime.timeWorked}" />
+                    </p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{workingTime.dateReg}">
+                            <f:convertDateTime pattern="dd-MMM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:sidebar>
         </h:form>
     </h:body>
 </html>

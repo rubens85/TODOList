@@ -17,4 +17,6 @@ import javax.ejb.Local;
 public interface ICollaboratorLocal {
     
     public Collaborator findByIdentification(String identification) throws UserNotFoundException;
+    public Collaborator updateCollaborator(Collaborator c);
+    public void save(Collaborator c);
 }

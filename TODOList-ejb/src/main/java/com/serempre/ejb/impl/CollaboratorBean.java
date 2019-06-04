@@ -34,9 +34,16 @@ public class CollaboratorBean implements ICollaboratorLocal {
             throw new UserNotFoundException("User not found");
         }
     }
-    
-    public void metodo() throws UserNotFoundException {
-        
+
+    @Override
+    public Collaborator updateCollaborator(Collaborator c) {
+        return em.merge(c);
     }
+
+    @Override
+    public void save(Collaborator c) {
+        em.persist(c);
+    }
+    
 
 }

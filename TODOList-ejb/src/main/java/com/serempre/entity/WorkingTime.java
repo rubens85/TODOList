@@ -6,6 +6,7 @@
 package com.serempre.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,8 +45,11 @@ public class WorkingTime implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "time_worked")
     private Float timeWorked;
+    @Column(name = "date_reg")
+    @Temporal(TemporalType.TIME)
+    private Date dateReg;
     @JoinColumn(name = "id_todo", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Todo todo;
 
     public WorkingTime() {
@@ -51,6 +57,12 @@ public class WorkingTime implements Serializable {
 
     public WorkingTime(Integer id) {
         this.id = id;
+    }
+
+    public WorkingTime(Date dateReg, Float timeWorked, Todo todo) {
+        this.dateReg = dateReg;
+        this.timeWorked = timeWorked;
+        this.todo = todo;
     }
 
     public Integer getId() {
@@ -95,6 +107,14 @@ public class WorkingTime implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public Date getDateReg() {
+        return dateReg;
+    }
+
+    public void setDateReg(Date dateReg) {
+        this.dateReg = dateReg;
     }
 
     @Override

@@ -8,6 +8,7 @@ package com.serempre.entity;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,8 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Todo.findByTitle", query = "SELECT t FROM Todo t WHERE t.title = :title"),
     @NamedQuery(name = "Todo.findByDescription", query = "SELECT t FROM Todo t WHERE t.description = :description"),
     @NamedQuery(name = "Todo.findByEstimatedTime", query = "SELECT t FROM Todo t WHERE t.estimatedTime = :estimatedTime"),
-    @NamedQuery(name = "Todo.findByTimeRemaining", query = "SELECT t FROM Todo t WHERE t.timeRemaining = :timeRemaining"),
-    @NamedQuery(name = "Todo.findByTotalTimeWorked", query = "SELECT t FROM Todo t WHERE t.totalTimeWorked = :totalTimeWorked")})
+    @NamedQuery(name = "Todo.findByTimeRemaining", query = "SELECT t FROM Todo t WHERE t.timeRemaining = :timeRemaining")})
 public class Todo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,25 +49,23 @@ public class Todo implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 32)
+    @Size(max = 32, message = "El tamaño del título no puede ser mayor a 32")
     @Column(name = "title")
     private String title;
     @NotNull
     @Size(max = 2147483647)
     @Column(name = "description")
     private String description;
+    @Digits(integer = 2, fraction = 2, message = "Debe ser número")
     @Column(name = "estimated_time")
     private Short estimatedTime;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "time_remaining")
     private Float timeRemaining;
-    @Column(name = "total_time_worked")
-    private Float totalTimeWorked;
+    @NotNull
     @JoinColumn(name = "id_collaborator", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Collaborator collaborator;
-    @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
-    private Set<WorkingTime> workingTimeSet;
 
     public Todo() {
     }
@@ -96,9 +95,9 @@ public class Todo implements Serializable {
     }
 
     public String getDescription() {
-        if(description == null)
+//        if(description == null)
             return description;
-        return description.length()>16?description.substring(0, 16)+"...":description;
+//        return description.length()>16?description.substring(0, 16)+"...":description;
     }
 
     public void setDescription(String description) {
@@ -121,29 +120,12 @@ public class Todo implements Serializable {
         this.timeRemaining = timeRemaining;
     }
 
-    public Float getTotalTimeWorked() {
-        return totalTimeWorked;
-    }
-
-    public void setTotalTimeWorked(Float totalTimeWorked) {
-        this.totalTimeWorked = totalTimeWorked;
-    }
-
     public Collaborator getCollaborator() {
         return collaborator;
     }
 
     public void setCollaborator(Collaborator collaborator) {
         this.collaborator = collaborator;
-    }
-
-    @XmlTransient
-    public Set<WorkingTime> getWorkingTimeSet() {
-        return workingTimeSet;
-    }
-
-    public void setWorkingTimeSet(Set<WorkingTime> workingTimeSet) {
-        this.workingTimeSet = workingTimeSet;
     }
 
     @Override

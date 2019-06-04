@@ -6,7 +6,7 @@
 package com.serempre.ejb.inter.local;
 
 import com.serempre.entity.Todo;
-import java.util.Date;
+import com.serempre.entity.WorkingTime;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -15,11 +15,8 @@ import javax.ejb.Local;
  * @author rubens
  */
 @Local
-public interface ITodoLocal {
+public interface IWorkingTimeLocal {
     
-    public List<Todo> getTodoALL();
-    public void save(Todo todo);
-    public void delete(Todo todo);
-    public void merge(Todo todo);
-    public void saveWorkingTime(Todo todoAux, Float time);
+    public void save(WorkingTime wt);
+    public List<WorkingTime> find(Todo todo);
 }
