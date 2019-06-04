@@ -66,22 +66,24 @@
             <h:outputText value="#{todoAction.todoAux.title}" />
             <br/>
 
-            <h:outputLabel value="Tiempo restante:"/>
+            <h:outputLabel value="Tiempo restante"/>
             <h:outputText value="#{todoAction.todoAux.timeRemaining}" />
             <br/>
             
-            <h:outputLabel for="addTime" value="Añadir tiempo: " />
-            <p:inputText id="addTime" value="#{todoAction.time}" size="2" maxlength="4" style="text-align: center" required="true"/>
+            <h:outputLabel for="addTime" value="Añadir tiempo " />
+            <p:inputNumber id="addTime" value="#{todoAction.time}" minValue="0" maxValue="99" decimalPlaces="1" size="3"
+                           style="text-align: center" required="true" label="Tiempo restante"/>
             <p:message for="addTime" display="icon" />
             
             <h:outputLabel for="date" value="Fecha: " />
-            <p:datePicker id="date" value="#{todoAction.dateReg}" showIcon="true" size="10" required="true"/>
+            <p:datePicker id="date" value="#{todoAction.dateReg}" showIcon="true" size="10" required="true" label="Fecha"/>
             <p:message for="date" display="icon" />
 
             <br/>
             <p:commandButton value="Registrar" action="#{todoAction.saveWorkingTime()}" update="msgs, :form:tblResul, gridAddTime" 
                              process="date addTime" validateClient="true"/>
         </p:panelGrid>
+    </p:dialog>
 
 
 </html>
