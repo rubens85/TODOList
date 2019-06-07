@@ -11,11 +11,14 @@ import com.serempre.ejb.inter.local.IWorkingTimeLocal;
 import com.serempre.entity.Collaborator;
 import com.serempre.entity.Todo;
 import com.serempre.entity.WorkingTime;
+import com.serempre.handleexception.RemainingTimeException;
 import com.serempre.handleexception.UserNotFoundException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -46,12 +49,23 @@ public class TodoAction implements Serializable {
     private Float time;
     private Date dateReg;
     private boolean buttonUpdateFlag = true;
+    private boolean flagRequired;
 
     /**
      * Creates a new instance of TodoManagedBean
      */
     public TodoAction() {
         this.initFields();
+    }
+    
+    public void changeFlagOnOpenTarea() {
+        flagRequired = true;
+        System.out.println(flagRequired);
+    }
+    
+    public void changeFlagOnOpenTiempo() {
+        flagRequired = false;
+        System.out.println(flagRequired);
     }
 
     @PostConstruct
@@ -103,9 +117,13 @@ public class TodoAction implements Serializable {
     }
     
     public void saveWorkingTime(){
-        workingTimeDAO.save(new WorkingTime(dateReg, time, todoAux));
-        todoDao.saveWorkingTime(todoAux, time);
-        addMessage("Registro Exitoso!", FacesMessage.SEVERITY_INFO);
+        try {
+            todoDao.saveWorkingTime(todoAux, time);
+            workingTimeDAO.save(new WorkingTime(dateReg, time, todoAux));
+            addMessage("Registro Exitoso!", FacesMessage.SEVERITY_INFO);
+        } catch (RemainingTimeException ex) {
+            addMessage("Registro Fallido!. El tiempo registrado es mayor que el tiempo restante.", FacesMessage.SEVERITY_ERROR);
+        }
     }
     
     public void showWorkTime() {
@@ -175,6 +193,14 @@ public class TodoAction implements Serializable {
 
     public void setDateReg(Date dateReg) {
         this.dateReg = dateReg;
+    }
+
+    public boolean isFlagRequired() {
+        return flagRequired;
+    }
+
+    public void setFlagRequired(boolean flagRequired) {
+        this.flagRequired = flagRequired;
     }
 
 }

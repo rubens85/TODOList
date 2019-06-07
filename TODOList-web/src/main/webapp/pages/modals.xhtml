@@ -15,7 +15,7 @@
             <p:panelGrid id="gridCol" columns="5" styleClass="ui-noborder" style="width: 90%;">
 
                 <h:outputLabel for="txtIdent" value="Identificación" style="font-weight:bold"/>
-                <p:inputText id="txtIdent" value="#{todoAction.todo.collaborator.identificationCard}" required="true" label="Identificación">
+                <p:inputText id="txtIdent" value="#{todoAction.todo.collaborator.identificationCard}" required="#{todoAction.flagRequired}" label="Identificación">
                     <p:ajax event="keyup" process="txtIdent, name, lastName" update="name, lastName,btnUpdCol" 
                             listener="#{todoAction.keyupListener}"/>
                     
@@ -39,16 +39,16 @@
         <p:fieldset legend="Nueva Tarea" style="margin-bottom:20px">
             <p:panelGrid id="gridTodo" columns="6" styleClass="ui-noborder" style="width: 90%;">
                 <h:outputLabel for="txtTitle" value="Titulo" style="font-weight:bold"/>
-                <p:inputText id="txtTitle" value="#{todoAction.todo.title}" required="true" label="Titulo"/>
+                <p:inputText id="txtTitle" value="#{todoAction.todo.title}" required="#{todoAction.flagRequired}" label="Titulo"/>
                 <p:message for="txtTitle" display="icon" />
                 <h:outputLabel for="time" value="Tiempo Estimado" style="font-weight:bold"/>
                 <p:inputText id="time" value="#{todoAction.todo.estimatedTime}" size="2" maxlength="2" style="text-align: center"
-                             required="true" label="Tiempo Estimado"/>
+                             required="#{todoAction.flagRequired}" label="Tiempo Estimado"/>
                 <p:message for="time" display="icon" />
             </p:panelGrid><br/>
             <p:panelGrid id="gridTodo2" columns="3" styleClass="ui-noborder" >
                 <h:outputLabel for="descr" value="Descripción" style="font-weight:bold"/>
-                <p:inputTextarea id="descr" value="#{todoAction.todo.description}" cols="50" required="true" label="Descripción"/>
+                <p:inputTextarea id="descr" value="#{todoAction.todo.description}" cols="50" required="#{todoAction.flagRequired}" label="Descripción"/>
                 <p:message for="descr" display="icon" />
             </p:panelGrid>
         </p:fieldset>
@@ -72,16 +72,16 @@
             
             <h:outputLabel for="addTime" value="Añadir tiempo " />
             <p:inputNumber id="addTime" value="#{todoAction.time}" minValue="0" maxValue="99" decimalPlaces="1" size="3"
-                           style="text-align: center" required="true" label="Tiempo restante"/>
+                           style="text-align: center" required="#{!todoAction.flagRequired}" label="Tiempo restante"/>
             <p:message for="addTime" display="icon" />
             
             <h:outputLabel for="date" value="Fecha: " />
-            <p:datePicker id="date" value="#{todoAction.dateReg}" showIcon="true" size="10" required="true" label="Fecha"/>
+            <p:datePicker id="date" value="#{todoAction.dateReg}" showIcon="true" size="10" required="#{!todoAction.flagRequired}" label="Fecha"/>
             <p:message for="date" display="icon" />
 
             <br/>
             <p:commandButton value="Registrar" action="#{todoAction.saveWorkingTime()}" update="msgs, :form:tblResul, gridAddTime" 
-                             process="date addTime" validateClient="true"/>
+                             validateClient="true"/>
         </p:panelGrid>
     </p:dialog>
 

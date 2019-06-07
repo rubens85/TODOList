@@ -6,6 +6,7 @@
 package com.serempre.ejb.inter.local;
 
 import com.serempre.entity.Todo;
+import com.serempre.handleexception.RemainingTimeException;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -21,5 +22,5 @@ public interface ITodoLocal {
     public void save(Todo todo);
     public void delete(Todo todo);
     public void merge(Todo todo);
-    public void saveWorkingTime(Todo todoAux, Float time);
+    public void saveWorkingTime(Todo todoAux, Float time) throws RemainingTimeException;
 }

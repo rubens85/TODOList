@@ -26,7 +26,8 @@
                 <f:facet name="header">
                     <h:panelGrid columns="2" width="100%">
                         <h:outputText value="TODO List"/>
-                        <p:commandButton title="Registrar Tarea" type="button" onclick="PF('dialogTODO').show();" icon="pi pi-list" />
+                        <p:commandButton title="Registrar Tarea" action="#{todoAction.changeFlagOnOpenTarea()}" 
+                                         onclick="PF('dialogTODO').show();" icon="pi pi-list" immediate="true" />
                     </h:panelGrid>
                 </f:facet>
                 <p:dataTable id="tblResul" var="todo" value="#{todoAction.listOfTODO}">
@@ -51,8 +52,8 @@
                     </p:column>
 
                     <p:column headerText="">
-                        <p:commandButton update=":form:addWorkTim" title="Registrar Tiempo" 
-                                         oncomplete="PF('dlg2').show();" icon="pi pi-plus-circle" immediate="true">
+                        <p:commandButton update=":form:addWorkTim" title="Registrar Tiempo" action="#{todoAction.changeFlagOnOpenTiempo()}"
+                                         oncomplete="PF('dlg2').show();" icon="pi pi-plus-circle" immediate="true" disabled="#{todo.timeRemaining==0?true:false}">
                             <f:setPropertyActionListener value="#{todo}" target="#{todoAction.todoAux}" />
                         </p:commandButton>
                         

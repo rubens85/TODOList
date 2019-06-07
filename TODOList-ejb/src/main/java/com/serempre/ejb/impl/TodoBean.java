@@ -7,6 +7,7 @@ package com.serempre.ejb.impl;
 
 import com.serempre.ejb.inter.local.ITodoLocal;
 import com.serempre.entity.Todo;
+import com.serempre.handleexception.RemainingTimeException;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -48,12 +49,13 @@ public class TodoBean implements ITodoLocal {
     }
 
     @Override
-    public void saveWorkingTime(Todo todo, Float time) {
-        todo.setTimeRemaining(
-                toFloatCustom(
-                        calculator.getCalculatorSoap12().subtract(toIntCustom(todo.getTimeRemaining()), toIntCustom(time))
-                )
-        );
+    public void saveWorkingTime(Todo todo, Float time) throws RemainingTimeException {
+        int subtract = calculator.getCalculatorSoap12().subtract(toIntCustom(todo.getTimeRemaining()), toIntCustom(time));
+        
+        if(subtract < 0)
+            throw new RemainingTimeException("Negative value");
+        
+        todo.setTimeRemaining(toFloatCustom(subtract));
         em.merge(todo);
     }
 
