@@ -1,0 +1,59 @@
+CREATE DATABASE todolist1
+  WITH OWNER = serempre
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'en_US.UTF-8'
+       LC_CTYPE = 'en_US.UTF-8'
+       CONNECTION LIMIT = -1;
+
+
+CREATE TABLE public.collaborator
+(
+  id integer NOT NULL DEFAULT nextval('"Collaborator_id_seq"'::regclass),
+  name character varying,
+  last_name character varying,
+  identification_card character varying,
+  CONSTRAINT id_collaborator_pk PRIMARY KEY (id),
+  CONSTRAINT unique_identification_card UNIQUE (identification_card)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.collaborator
+  OWNER TO serempre;
+
+CREATE TABLE public.todo
+(
+  id integer NOT NULL DEFAULT nextval('todo_id_seq'::regclass),
+  title character varying(32),
+  description character varying NOT NULL,
+  estimated_time smallint NOT NULL,
+  id_collaborator integer NOT NULL,
+  time_remaining real,
+  CONSTRAINT id_todolist_pk PRIMARY KEY (id),
+  CONSTRAINT id_collaborator_fk FOREIGN KEY (id_collaborator)
+      REFERENCES public.collaborator (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.todo
+  OWNER TO serempre;
+  
+  CREATE TABLE public.working_time
+(
+  id integer NOT NULL DEFAULT nextval('working_time_id_seq'::regclass),
+  id_todo integer,
+  time_worked real,
+  date_reg time with time zone,
+  CONSTRAINT id_working_time_pk PRIMARY KEY (id),
+  CONSTRAINT id_todo_fk FOREIGN KEY (id_todo)
+      REFERENCES public.todo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.working_time
+  OWNER TO serempre;
